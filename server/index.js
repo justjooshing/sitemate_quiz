@@ -11,9 +11,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const clientUrl = "http://localhost:8081/";
 
 const jsonObj = {
-  id: "",
-  title: "",
-  description: "",
+  id: "123",
+  title: "Title of this issue",
+  description: "An issue description",
 };
 /**
  * 
@@ -45,7 +45,7 @@ app.post("/api/issues/create", (req, res) => {
   }
 });
 
-app.post("/api/issues", (req, res) => {
+app.post("/api/issues/update", (req, res) => {
   try {
     const data = req.body.json();
     res.status(200).json(jsonObj);
@@ -54,7 +54,7 @@ app.post("/api/issues", (req, res) => {
   }
 });
 
-app.delete("/api/issues", () => {
+app.delete("/api/issues/delete", () => {
   try {
     res.status(204);
   } catch (err) {
