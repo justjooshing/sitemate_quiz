@@ -30,35 +30,46 @@ app.get("/api/issues", async (req, res) => {
     res.status(200).json(jsonObj);
   } catch (err) {
     console.log("get error", err);
+    res.status(400).send(err);
   }
 });
 
 // can I combine these?
 app.post("/api/issues/create", (req, res) => {
   try {
-    const data = req.body.json();
+    const data = req.body;
+    console.log("This is the created data", data);
     if (data.id) {
     }
     res.status(201).json(jsonObj);
   } catch (err) {
-    console.log("post err", err);
+    console.log("create err", err);
+    res.status(400).send(err);
   }
 });
 
 app.post("/api/issues/update", (req, res) => {
   try {
-    const data = req.body.json();
+    const data = req.body;
+    console.log("This is the updated data", data);
     res.status(200).json(jsonObj);
   } catch (err) {
-    console.log("post err", err);
+    console.log("update err", err);
+    res.status(400).send(err);
   }
 });
 
-app.delete("/api/issues/delete", () => {
+app.delete("/api/issues/delete", (req, res) => {
   try {
+    const { issueid } = req.query;
+    if (!issueid) {
+      throw new Error("No issue id");
+    }
+    console.log("deleted issue with id:", issueid);
     res.status(204);
   } catch (err) {
-    console.log("post err", err);
+    console.log(err);
+    res.status(400).send(err);
   }
 });
 
