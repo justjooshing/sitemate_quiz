@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import "./App.css";
 import {
+  Issue,
   useCreateIssue,
   useDeleteIssue,
   useGetIssue,
@@ -9,19 +10,44 @@ import {
 
 function App() {
   const {
-    data: { data },
-    isLoading,
+    data: { data: currentIssue },
   } = useGetIssue();
-  const { mutate: deleteIssue } = useDeleteIssue();
-  const { mutate: updateIssue } = useUpdateIssue();
-  const { mutate: createIssue } = useCreateIssue();
-  console.log(data);
+  const deleteIssue = useDeleteIssue();
+  const updateIssue = useUpdateIssue();
+  const createIssue = useCreateIssue();
 
+  const handleDelete = () => {
+    deleteIssue.mutate(currentIssue);
+  };
+
+  const handleUpdate = () => {
+    const issue: Issue = { ...currentIssue, title: "This is my updated title" };
+    updateIssue.mutate(issue);
+  };
+
+  const handleCreate = () => {
+    const newIssue: Issue = {
+      id: `${Math.ceil(Math.random() * 100)}`,
+      title: "This is the new issue title",
+      description: "This is the updated description",
+    };
+    createIssue.mutate(newIssue);
+  };
   return (
     <Suspense fallback="loading">
-      {Object.values(data).map((prop) => {
-        return <p key={prop}>{prop}</p>;
-      })}
+      {Object.values(currentIssue).map((prop) => (
+        <p key={prop}>{prop}</p>
+      ))}
+
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <button onClick={handleDelete}>Delete Current Issue</button>
+        {deleteIssue.isError && <p>{deleteIssue.error.message}</p>}
+        <button onClick={handleUpdate}>Update</button>
+        {updateIssue.isError && <p>{updateIssue.error.message}</p>}
+
+        <button onClick={handleCreate}>Create</button>
+        {createIssue.isError && <p>{createIssue.error.message}</p>}
+      </div>
     </Suspense>
   );
 }

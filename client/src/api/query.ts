@@ -10,22 +10,20 @@ enum Keys {
   issues = "issues",
 }
 
-interface Issue {
+export interface Issue {
   id: string;
   title: string;
   description: string;
 }
 
-const getIssue = async (issue: Issue) => {
-  const params = new URLSearchParams();
-  params.append("issueid", issue.id);
-  client.get<Issue>(ENDPOINTS.ISSUES, { params });
+const getIssue = async () => {
+  return await client.get<Issue>(ENDPOINTS.ISSUES);
 };
 
-export const useGetIssue = (issue: Issue) =>
+export const useGetIssue = () =>
   useSuspenseQuery({
     queryKey: [Keys.issues],
-    queryFn: () => getIssue(issue),
+    queryFn: getIssue,
   });
 
 const createIssue = async (newIssue: Issue) =>
